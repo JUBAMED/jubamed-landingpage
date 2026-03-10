@@ -9,6 +9,7 @@
       gtag('js', new Date());
       gtag('config', 'G-MEKWYSRZSQ');
     </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -17,7 +18,7 @@
     <meta name="description" content="JUBAMED bietet internationale Telekonsultationen mit Fachärzten weltweit. Professionelle medizinische Beratung bequem von zu Hause aus.">
     <meta name="keywords" content="JUBAMED, Telekonsultation, Online Arzt, medizinische Beratung, Fernsprechstunde, Gesundheit, Arzttermin online">
     
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%234A9B9B'/%3E%3Cpolyline points='5,24 12,24 16,13 22,35 26,18 30,26 34,24 43,24' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -893,22 +894,219 @@
         .success-message p {
             color: var(--text-secondary);
         }
+        /* ── Speed Dial ── */
+        .speed-dial {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-end;
+            gap: 12px;
+            transition: opacity 0.3s ease;
+        }
+        .speed-dial.hidden { opacity: 0; pointer-events: none; }
+        .sd-toggle {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: var(--primary-teal);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(74,155,155,0.5);
+            transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            font-family: var(--font-main);
+            position: relative;
+            flex-shrink: 0;
+        }
+        .sd-toggle:hover { background: var(--primary-teal-dark); transform: scale(1.08); }
+        .sd-toggle .sd-icon-open  { transition: all 0.3s ease; }
+        .sd-toggle .sd-icon-close {
+            position: absolute; opacity: 0;
+            transform: rotate(-90deg); transition: all 0.3s ease; font-size: 1.2rem;
+        }
+        .speed-dial.open .sd-toggle .sd-icon-open  { opacity: 0; transform: rotate(90deg); }
+        .speed-dial.open .sd-toggle .sd-icon-close { opacity: 1; transform: rotate(0deg); }
+        .sd-toggle::after {
+            content: ''; position: absolute; inset: -4px; border-radius: 50%;
+            border: 2px solid rgba(74,155,155,0.4);
+            animation: sd-pulse 2s ease-in-out infinite;
+        }
+        @keyframes sd-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50%       { transform: scale(1.18); opacity: 0; }
+        }
+        .sd-items {
+            display: flex; flex-direction: column-reverse;
+            align-items: flex-end; gap: 10px;
+        }
+        .sd-item {
+            display: flex; align-items: center; gap: 10px;
+            opacity: 0; transform: translateY(16px) scale(0.85);
+            transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+            pointer-events: none; text-decoration: none;
+        }
+        .speed-dial.open .sd-item { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+        .speed-dial.open .sd-item:nth-child(1) { transition-delay: 0.05s; }
+        .speed-dial.open .sd-item:nth-child(2) { transition-delay: 0.10s; }
+        .speed-dial.open .sd-item:nth-child(3) { transition-delay: 0.15s; }
+        .speed-dial.open .sd-item:nth-child(4) { transition-delay: 0.20s; }
+        .sd-label {
+            background: var(--dark-blue); color: white;
+            padding: 7px 14px; border-radius: 20px;
+            font-size: 0.82rem; font-weight: 600;
+            white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .sd-btn {
+            width: 48px; height: 48px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; box-shadow: 0 3px 12px rgba(0,0,0,0.18);
+            border: none; cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            flex-shrink: 0; text-decoration: none; color: white;
+        }
+        .sd-btn:hover { transform: scale(1.12); box-shadow: 0 5px 18px rgba(0,0,0,0.25); }
+        .sd-btn-calendly  { background: var(--primary-teal); }
+        .sd-btn-email     { background: var(--dark-blue); }
+        .sd-btn-phone     { background: #2E7D32; }
+        .sd-btn-whatsapp  { background: #25D366; }
+        .sd-phone-tooltip {
+            display: none; position: absolute; right: 64px;
+            background: white; color: var(--dark-blue);
+            padding: 10px 16px; border-radius: 10px;
+            font-size: 0.9rem; font-weight: 600;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            white-space: nowrap; border: 1px solid var(--border-light);
+        }
+        .sd-phone-tooltip.show { display: block; }
+        .sd-phone-wrapper { position: relative; }
+        @media (max-width: 480px) {
+            .sd-label { display: none; }
+            .speed-dial { bottom: 20px; right: 16px; }
+        }
+
+        /* Founder Card */
+        .founder-card {
+            display: flex;
+            gap: 36px;
+            align-items: flex-start;
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 36px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+            margin-top: 40px;
+            border-left: 4px solid var(--dark-blue);
+            text-align: left;
+        }
+        .founder-photo {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center top;
+            flex-shrink: 0;
+            border: 3px solid var(--border-light);
+        }
+        .founder-info h3 {
+            font-size: 1.1rem;
+            color: var(--dark-blue);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        .founder-info .founder-title {
+            font-size: 0.85rem;
+            color: var(--primary-teal);
+            font-weight: 600;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .founder-info p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        @media (max-width: 640px) {
+            .founder-card { flex-direction: column; align-items: center; text-align: center; }
+        }
     </style>
 </head>
 <body data-lang="de">
+
+    <!-- Speed Dial -->
+    <div class="speed-dial" id="speedDial">
+
+        <!-- Action items (bottom = first shown) -->
+        <div class="sd-items">
+
+            <!-- 1. Calendly -->
+            <a href="https://calendly.com/redouane-dali-jubamed" target="_blank" class="sd-item">
+                <span class="sd-label lang-de">Termin vereinbaren</span>
+                <span class="sd-label lang-en">Book a meeting</span>
+                <span class="sd-btn sd-btn-calendly">📅</span>
+            </a>
+
+            <!-- 2. E-Mail -->
+            <a href="/cdn-cgi/l/email-protection#493b2c2d263c28272c672d28252009233c2b28242c2d672a2624763a3c2b232c2a3d74022626392c3b283d2026273a28272f3b282e2c6c7b79033c2b28042c2d" class="sd-item">
+                <span class="sd-label lang-de">E-Mail schreiben</span>
+                <span class="sd-label lang-en">Send email</span>
+                <span class="sd-btn sd-btn-email">✉</span>
+            </a>
+
+            <!-- 3. Telefon (Nummer nur nach Klick sichtbar) -->
+            <div class="sd-item sd-phone-wrapper" id="sdPhoneItem">
+                <span class="sd-phone-tooltip" id="sdPhoneTooltip">+49 1523 7521823</span>
+                <span class="sd-label lang-de" id="sdPhoneLabel">Direkt anrufen</span>
+                <span class="sd-label lang-en" id="sdPhoneLabelEn" style="display:none">Call directly</span>
+                <a href="tel:+4915237521823" class="sd-btn sd-btn-phone" id="sdPhoneBtn" style="display:none">📞</a>
+                <button class="sd-btn sd-btn-phone" id="sdPhoneTrigger" onclick="revealPhone(event)">📞</button>
+            </div>
+
+            <!-- 4. WhatsApp -->
+            <a href="https://wa.me/4915237521823?text=Guten%20Tag%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Zusammenarbeit%20mit%20JUBAMED." target="_blank" class="sd-item">
+                <span class="sd-label">WhatsApp</span>
+                <span class="sd-btn sd-btn-whatsapp">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                </span>
+            </a>
+
+        </div>
+
+        <!-- Toggle button -->
+        <button class="sd-toggle" id="sdToggle" onclick="toggleSpeedDial()" aria-label="Kontakt">
+            <span class="sd-icon-open">✉</span>
+            <span class="sd-icon-close">✕</span>
+        </button>
+
+    </div>
+
 
     <!-- Navigation -->
     <nav>
         <div class="container nav-container">
             <a href="#" class="logo">
-                <img src="logo.png" alt="JUBAMED Logo" style="height:40px;">
-                <span class="logo-text">JUBAMED</span>
+                <svg width="190" height="40" viewBox="0 0 190 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="JUBAMED Logo">
+                    <!-- Puls-Icon Box -->
+                    <rect width="40" height="40" rx="10" fill="#4A9B9B"/>
+                    <polyline points="5,20 11,20 15,10 21,30 25,15 29,23 33,20 39,20" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <!-- Wordmark -->
+                    <text x="52" y="26" font-family="'DM Sans','Inter',sans-serif" font-weight="700" font-size="17" letter-spacing="1.5" fill="#3D5A6C">JUBA</text>
+                    <text x="104" y="26" font-family="'DM Sans','Inter',sans-serif" font-weight="700" font-size="17" letter-spacing="1.5" fill="#4A9B9B">MED</text>
+                </svg>
             </a>
             
             <div class="nav-controls">
                 <div class="language-switcher">
-                    <button class="lang-btn active" onclick="setLanguage('de')">DE</button>
-                    <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+                    <button class="lang-btn active" onclick="setLanguage('de', this)">DE</button>
+                    <button class="lang-btn" onclick="setLanguage('en', this)">EN</button>
                 </div>
             </div>
         </div>
@@ -918,19 +1116,22 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <span class="hero-tag">JUBAMED</span>
+                <span class="hero-tag">
+                    <span class="lang-de">Diabetologie · Golfregion</span>
+                    <span class="lang-en">Diabetology · Gulf Region</span>
+                </span>
                 <h1>
-                    <span class="lang-de">Internationale Telekonsultationen mit Fachärzten in Deutschland</span>
-                    <span class="lang-en">International Teleconsultations with Specialist Physicians in Germany</span>
+                    <span class="lang-de">Deutsche Top-Diabetologen – für Patienten aus Saudi-Arabien</span>
+                    <span class="lang-en">Germany's Leading Diabetologists – for Patients from Saudi Arabia</span>
                 </h1>
                 <p class="hero-subtitle">
-                    <span class="lang-de">Digitale medizinische Konsultationen für Patienten weltweit</span>
-                    <span class="lang-en">Digital medical consultations for patients worldwide</span>
+                    <span class="lang-de">Klinikdirektoren und Chefärzte führender deutscher Universitätskliniken. Strukturierte Fallvorbereitung. Videokonsultation – ohne Reise nach Deutschland.</span>
+                    <span class="lang-en">Clinic directors and chief physicians from Germany's leading university hospitals. Structured case preparation. Video consultation – no travel required.</span>
                 </p>
                 <div>
                     <a href="#contact" class="cta-button">
-                        <span class="lang-de">Interesse registrieren</span>
-                        <span class="lang-en">Register Interest</span>
+                        <span class="lang-de">15-Minuten-Gespräch vereinbaren</span>
+                        <span class="lang-en">Schedule a 15-minute call</span>
                     </a>
                     <a href="#about" class="cta-button secondary">
                         <span class="lang-de">Mehr erfahren</span>
@@ -953,19 +1154,35 @@
             
             <div class="about-content">
                 <p class="about-text">
-                    <span class="lang-de">JUBAMED koordiniert internationale medizinische Konsultationen zwischen qualifizierten Fachärzten in Deutschland und Patienten aus der Golfregion.</span>
-                    <span class="lang-en">JUBAMED coordinates international medical consultations between qualified specialist physicians in Germany and patients from the Gulf region.</span>
+                    <span class="lang-de">JUBAMED verbindet Patienten aus Saudi-Arabien mit renommierten deutschen Fachärzten – Klinikdirektoren und Chefärzte führender Universitätskliniken in ganz Deutschland. Vollständiger arabischer Service: Koordination, Dolmetscher, Befunde auf Arabisch.</span>
+                    <span class="lang-en">JUBAMED connects patients from Saudi Arabia with renowned German specialist physicians – clinic directors and chief physicians from Germany's leading university hospitals. Full Arabic-language service: coordination, interpreter, reports in Arabic.</span>
                 </p>
-                
+
                 <div class="platform-note">
                     <h3>
-                        <span class="lang-de">Plattform-Positionierung</span>
-                        <span class="lang-en">Platform Positioning</span>
+                        <span class="lang-de">Fachlicher Fokus: Diabetologie</span>
+                        <span class="lang-en">Medical Focus: Diabetology</span>
                     </h3>
                     <p>
-                        <span class="lang-de">JUBAMED ist eine digitale Plattform für internationale medizinische Konsultationen in verschiedenen medizinischen Fachrichtungen. Der aktuelle Fokus liegt auf Dermatologie und Stoffwechselerkrankungen, insbesondere Diabetes. Weitere Fachrichtungen können zukünftig integriert werden.</span>
-                        <span class="lang-en">JUBAMED is a digital platform for international medical consultations across multiple medical specialties. The current focus is on dermatology and metabolic disorders, particularly diabetes. Additional specialties may be integrated in the future.</span>
+                        <span class="lang-de">24% der Bevölkerung in Saudi-Arabien sind von Diabetes betroffen – eine der höchsten Raten weltweit. JUBAMED gibt diesen Patienten Zugang zu den besten deutschen Diabetologen und Endokrinologen: Klinikdirektoren und Chefärzte aus LMU, TUM und führenden Universitätskliniken.</span>
+                        <span class="lang-en">24% of the population in Saudi Arabia are affected by diabetes – one of the highest rates worldwide. JUBAMED gives these patients access to Germany's best diabetologists and endocrinologists: clinic directors and chief physicians from LMU, TUM and leading university hospitals.</span>
                     </p>
+                </div>
+
+                <!-- Founder Card -->
+                <div class="founder-card">
+                    <img src="founder.png" alt="Redouane Dali – Gründer JUBAMED" class="founder-photo">
+                    <div class="founder-info">
+                        <h3>Redouane Dali</h3>
+                        <div class="founder-title">
+                            <span class="lang-de">Gründer · JUBAMED</span>
+                            <span class="lang-en">Founder · JUBAMED</span>
+                        </div>
+                        <p>
+                            <span class="lang-de">Ingenieur mit über 15 Jahren Erfahrung in der Industrie und im internationalen Vertrieb – Fokus MENA-Region. Mit arabischen Wurzeln und deutschem Berufsalltag kenne ich beide Welten. Ich weiß, wie schwer Patienten aus Saudi-Arabien Zugang zu deutscher Spitzenmedizin bekommen – JUBAMED schließt genau diese Lücke.</span>
+                            <span class="lang-en">Engineer with 15+ years in industry and international business development, focused on MENA. With Arabic roots and a German professional career, I understand both worlds. I know how hard it is for patients from Saudi Arabia to reach Germany's best specialists – JUBAMED closes exactly that gap.</span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -990,12 +1207,12 @@
                     <div class="step-number">1</div>
                     <div class="step-connector"></div>
                     <h3>
-                        <span class="lang-de">Anfrage</span>
-                        <span class="lang-en">Request</span>
+                        <span class="lang-de">Kontakt</span>
+                        <span class="lang-en">Contact</span>
                     </h3>
                     <p>
-                        <span class="lang-de">Patientenanfrage wird übermittelt</span>
-                        <span class="lang-en">Patient request is submitted</span>
+                        <span class="lang-de">Patient kontaktiert JUBAMED – wir koordinieren alles</span>
+                        <span class="lang-en">Patient contacts JUBAMED – we handle the rest</span>
                     </p>
                 </div>
                 
@@ -1064,6 +1281,27 @@
             </div>
             
             <div class="specialties-grid">
+                <div class="specialty-card" style="border-color: var(--primary-teal); background: rgba(74,155,155,0.04);">
+                    <div class="specialty-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M2 12h20"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <h3>
+                        <span class="lang-de">Diabetologie & Endokrinologie</span>
+                        <span class="lang-en">Diabetology & Endocrinology</span>
+                    </h3>
+                    <p>
+                        <span class="lang-de">Klinikdirektoren und Chefärzte aus LMU und TUM München – für Diabetes, Stoffwechsel und Hormonerkrankungen</span>
+                        <span class="lang-en">Clinic directors and chief physicians from LMU and TUM Munich – for diabetes, metabolic and hormonal disorders</span>
+                    </p>
+                    <p style="margin-top: 12px; font-size: 0.8rem; color: var(--primary-teal); font-weight: 600;">
+                        <span class="lang-de">✓ Aktueller Fokus</span>
+                        <span class="lang-en">✓ Current Focus</span>
+                    </p>
+                </div>
+                
                 <div class="specialty-card">
                     <div class="specialty-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1076,25 +1314,12 @@
                         <span class="lang-en">Dermatology</span>
                     </h3>
                     <p>
-                        <span class="lang-de">Hautärztliche Konsultationen und Zweitmeinungen</span>
-                        <span class="lang-en">Dermatological consultations and second opinions</span>
+                        <span class="lang-de">Hautärztliche Konsultationen mit deutschen Spezialisten – geplant für zukünftige Integration</span>
+                        <span class="lang-en">Dermatological consultations with German specialists – planned for future integration</span>
                     </p>
-                </div>
-                
-                <div class="specialty-card">
-                    <div class="specialty-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2v20M2 12h20"/>
-                            <circle cx="12" cy="12" r="3"/>
-                        </svg>
-                    </div>
-                    <h3>
-                        <span class="lang-de">Stoffwechsel</span>
-                        <span class="lang-en">Metabolic Disorders</span>
-                    </h3>
-                    <p>
-                        <span class="lang-de">Diabetes und endokrinologische Erkrankungen</span>
-                        <span class="lang-en">Diabetes and endocrine disorders</span>
+                    <p style="margin-top: 12px; font-size: 0.8rem; color: var(--text-light); font-weight: 600;">
+                        <span class="lang-de">◷ In Vorbereitung</span>
+                        <span class="lang-en">◷ Coming Soon</span>
                     </p>
                 </div>
             </div>
@@ -1120,12 +1345,12 @@
                         </svg>
                     </div>
                     <h4>
-                        <span class="lang-de">Internationale Reichweite</span>
-                        <span class="lang-en">International Access</span>
+                        <span class="lang-de">Neue Patienten</span>
+                        <span class="lang-en">New Patients</span>
                     </h4>
                     <p>
-                        <span class="lang-de">Patientenanfragen aus der Golfregion</span>
-                        <span class="lang-en">Patient requests from the Gulf region</span>
+                        <span class="lang-de">Zahlungskräftige Patienten aus der Golfregion – ohne Praxisaufwand Ihrerseits</span>
+                        <span class="lang-en">Financially strong patients from the Gulf region – with no extra effort on your part</span>
                     </p>
                 </div>
                 
@@ -1139,12 +1364,12 @@
                         </svg>
                     </div>
                     <h4>
-                        <span class="lang-de">Strukturierte Vorbereitung</span>
-                        <span class="lang-en">Structured Preparation</span>
+                        <span class="lang-de">Fertig vorbereitet</span>
+                        <span class="lang-en">Fully Prepared Cases</span>
                     </h4>
                     <p>
-                        <span class="lang-de">Professionelle Fallvorbereitung durch JUBAMED</span>
-                        <span class="lang-en">Professional case preparation by JUBAMED</span>
+                        <span class="lang-de">Alle Befunde, Vorbefunde und Fragestellungen – strukturiert aufbereitet, bevor Sie den Fall sehen</span>
+                        <span class="lang-en">All findings and prior results structured and prepared before you see the case</span>
                     </p>
                 </div>
                 
@@ -1158,12 +1383,12 @@
                         </svg>
                     </div>
                     <h4>
-                        <span class="lang-de">Flexible Teilnahme</span>
-                        <span class="lang-en">Flexible Participation</span>
+                        <span class="lang-de">Flexibel & digital</span>
+                        <span class="lang-en">Flexible & Digital</span>
                     </h4>
                     <p>
-                        <span class="lang-de">Digitale Konsultation nach Ihrem Zeitplan</span>
-                        <span class="lang-en">Digital consultation according to your schedule</span>
+                        <span class="lang-de">Konsultation nach Ihrem Zeitplan – von Ihrer Klinik aus, ohne zusätzliche Infrastruktur</span>
+                        <span class="lang-en">Consultation on your schedule – from your clinic, no additional infrastructure needed</span>
                     </p>
                 </div>
                 
@@ -1176,12 +1401,12 @@
                         </svg>
                     </div>
                     <h4>
-                        <span class="lang-de">Administrative Unterstützung</span>
-                        <span class="lang-en">Administrative Support</span>
+                        <span class="lang-de">Null Administrationsaufwand</span>
+                        <span class="lang-en">Zero Admin Overhead</span>
                     </h4>
                     <p>
-                        <span class="lang-de">Koordination und Organisation durch die Plattform</span>
-                        <span class="lang-en">Coordination and organization by the platform</span>
+                        <span class="lang-de">JUBAMED übernimmt Koordination, Kommunikation und Dolmetschen – Sie fokussieren sich auf die Medizin</span>
+                        <span class="lang-en">JUBAMED handles coordination, communication and interpreting – you focus on medicine</span>
                     </p>
                 </div>
             </div>
@@ -1193,103 +1418,52 @@
         <div class="container">
             <div class="section-header">
                 <h2>
-                    <span class="lang-de">Kontakt</span>
-                    <span class="lang-en">Contact</span>
+                    <span class="lang-de">Gespräch vereinbaren</span>
+                    <span class="lang-en">Schedule a Call</span>
                 </h2>
                 <p class="section-subtitle">
-                    <span class="lang-de">Registrieren Sie Ihr Interesse als Facharzt</span>
-                    <span class="lang-en">Register your interest as a specialist physician</span>
+                    <span class="lang-de">Sie sind Facharzt und möchten mehr erfahren? Wählen Sie den für Sie einfachsten Weg.</span>
+                    <span class="lang-en">Are you a specialist physician and want to learn more? Choose the easiest way for you.</span>
                 </p>
             </div>
-            
-            <div class="contact-container">
-                <form id="contactForm" action="https://formsubmit.co/redouane.dali@jubamed.com" method="POST">
-                    <!-- FormSubmit Configuration -->
-                    <input type="hidden" name="_subject" value="Neue JUBAMED Anfrage">
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="_template" value="table">
-                    <input type="hidden" name="_next" value="https://jubamed.com/danke.html">
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">
-                                <span class="lang-de">Name *</span>
-                                <span class="lang-en">Name *</span>
-                            </label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="specialty">
-                                <span class="lang-de">Fachrichtung *</span>
-                                <span class="lang-en">Specialty *</span>
-                            </label>
-                            <input type="text" id="specialty" name="specialty" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="practice">
-                                <span class="lang-de">Praxis/Klinik *</span>
-                                <span class="lang-en">Practice/Clinic *</span>
-                            </label>
-                            <input type="text" id="practice" name="practice" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">
-                                <span class="lang-de">E-Mail *</span>
-                                <span class="lang-en">Email *</span>
-                            </label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone">
-                            <span class="lang-de">Telefon (optional)</span>
-                            <span class="lang-en">Phone (optional)</span>
-                        </label>
-                        <input type="tel" id="phone" name="phone">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="message">
-                            <span class="lang-de">Nachricht</span>
-                            <span class="lang-en">Message</span>
-                        </label>
-                        <textarea id="message" name="message"></textarea>
-                    </div>
-                    
-                    <div class="checkbox-wrapper">
-                        <input type="checkbox" id="privacy" name="privacy" required>
-                        <label for="privacy">
-                            <span class="lang-de">Ich stimme der Speicherung und Verarbeitung meiner Daten gemäß der <a href="#" onclick="openAccordion('privacy')">Datenschutzerklärung</a> von JUBAMED zu.</span>
-                            <span class="lang-en">I agree to the storage and processing of my data according to the JUBAMED <a href="#" onclick="openAccordion('privacy')">privacy policy</a>.</span>
-                        </label>
-                    </div>
-                    
-                    <div class="error-message" id="privacyError">
-                        <span class="lang-de">Bitte bestätigen Sie die Datenschutzerklärung.</span>
-                        <span class="lang-en">Please confirm the privacy policy.</span>
-                    </div>
-                    
-                    <button type="submit" class="submit-btn" id="submitBtn">
-                        <span class="lang-de">Absenden</span>
-                        <span class="lang-en">Submit</span>
-                    </button>
-                </form>
-                
-                <div class="success-message" id="successMessage">
-                    <div class="success-icon">✓</div>
-                    <h3>
-                        <span class="lang-de">Vielen Dank!</span>
-                        <span class="lang-en">Thank you!</span>
-                    </h3>
-                    <p>
-                        <span class="lang-de">Ihre Anfrage wurde erfolgreich übermittelt. Wir werden uns in Kürze bei Ihnen melden.</span>
-                        <span class="lang-en">Your request has been successfully submitted. We will contact you shortly.</span>
+
+            <div class="contact-container" style="text-align: center;">
+
+                <!-- Primary CTA: Calendly -->
+                <div style="margin-bottom: 40px;">
+                    <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 24px;">
+                        <span class="lang-de">15 Minuten reichen – kein Formular, kein Aufwand.</span>
+                        <span class="lang-en">15 minutes is all it takes – no forms, no hassle.</span>
                     </p>
+                    <a href="https://calendly.com/redouane-dali-jubamed/15min" target="_blank" class="cta-button" style="font-size: 1.1rem; padding: 18px 40px;">
+                        <span class="lang-de">📅 Jetzt Termin buchen</span>
+                        <span class="lang-en">📅 Book a meeting now</span>
+                    </a>
                 </div>
+
+                <!-- Divider -->
+                <div style="display: flex; align-items: center; gap: 16px; margin: 32px 0;">
+                    <div style="flex: 1; height: 1px; background: var(--border-light);"></div>
+                    <span style="color: var(--text-light); font-size: 0.9rem;">
+                        <span class="lang-de">oder direkt per E-Mail</span>
+                        <span class="lang-en">or directly by email</span>
+                    </span>
+                    <div style="flex: 1; height: 1px; background: var(--border-light);"></div>
+                </div>
+
+                <!-- Secondary CTA: Email -->
+                <div>
+                    <a href="/cdn-cgi/l/email-protection#f78592939882969992d993969b9eb79d8295969a9293d994989ac88482959d929483cabc989887928596839e98998496999185969092d2c5c7bd829596ba9293d19598938ecaa4929f85d2c5c79092929f85839285d2c5c7bf928585d2c5c7b3969b9ed2c5b4d2c7b6d2c7b69e949fd2c5c79e998392859284849e928592d2c5c79a9e949fd2c5c791d2b4c4d2b5b485d2c5c7929e9992d2c5c7ad8284969a9a9299968595929e83d2c5c79a9e83d2c5c7bd829596ba9293d9d2c7b6d2c7b6ba9e83d2c5c79185928299939b9e949f9299d2c5c7b085d2b4c4d2b5b4d2b4c4d2ceb19299" class="cta-button secondary" style="border: 2px solid var(--primary-teal);">
+                        <span class="lang-de">✉ <span class="__cf_email__" data-cfemail="93e1f6f7fce6f2fdf6bdf7f2fffad3f9e6f1f2fef6f7bdf0fcfe">[email&#160;protected]</span></span>
+                        <span class="lang-en">✉ <span class="__cf_email__" data-cfemail="d5a7b0b1baa0b4bbb0fbb1b4b9bc95bfa0b7b4b8b0b1fbb6bab8">[email&#160;protected]</span></span>
+                    </a>
+                </div>
+
+                <!-- Trust note -->
+                <p style="margin-top: 32px; font-size: 0.85rem; color: var(--text-light);">
+                    <span class="lang-de">Ihre Daten werden vertraulich behandelt und nicht an Dritte weitergegeben.</span>
+                    <span class="lang-en">Your data will be treated confidentially and not shared with third parties.</span>
+                </p>
             </div>
         </div>
     </section>
@@ -1300,8 +1474,12 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <div class="footer-logo">
-                        <div class="footer-logo-icon"></div>
-                        <span class="footer-logo-text">JUBAMED</span>
+                        <svg width="160" height="34" viewBox="0 0 160 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="34" height="34" rx="8" fill="rgba(255,255,255,0.15)"/>
+                            <polyline points="4,17 9,17 13,9 17,25 21,13 24,19 28,17 33,17" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            <text x="44" y="22" font-family="'DM Sans','Inter',sans-serif" font-weight="700" font-size="14" letter-spacing="1.5" fill="white">JUBA</text>
+                            <text x="86" y="22" font-family="'DM Sans','Inter',sans-serif" font-weight="700" font-size="14" letter-spacing="1.5" fill="rgba(107,184,184,0.9)">MED</text>
+                        </svg>
                     </div>
                     <p>
                         <span class="lang-de">Internationale digitale Gesundheitsplattform</span>
@@ -1325,34 +1503,41 @@
                                 <div class="accordion-inner">
                                     <h5>Angaben gemäß § 5 TMG</h5>
                                     <p>
-                                        Redouane Dali<br>
-                                        Redouane Dali (JUBAMED)<br>
+                                        <strong>Redouane Dali</strong><br>
+                                        (Inhaber: JUBAMED – Internationale Telemedizin)<br>
                                         Bakusbrink 43a<br>
                                         32120 Hiddenhausen<br>
                                         Deutschland
                                     </p>
-                                    
+
                                     <h5>Kontakt</h5>
                                     <p>
-                                        E-Mail: redouane.dali@JUBAMED.com<br>
+                                        E-Mail: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6d1f080902180c030843090c01042d07180f0c000809430e0200">[email&#160;protected]</a><br>
                                         Telefon: +49 1523 7521823<br>
-                                        Website: www.JUBAMED.com
+                                        Website: www.jubamed.com
                                     </p>
-                                    
+
                                     <h5>Umsatzsteuer-ID</h5>
-                                    <p>Umsatzsteuer-Identifikationsnummer gemäß §27 a Umsatzsteuergesetz:<br>DE441159469</p>
-                                    
-                                    <h5>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h5>
-                                    <p>Redouane Dali, Bakusbrink 43a, 32120 Hiddenhausen</p>
-                                    
-                                    <h5>Streitschlichtung</h5>
-                                    <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: https://ec.europa.eu/consumers/odr.<br><br>
-                                    Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
-                                    
-                                    <h5>Behörde</h5>
+                                    <p>Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br>
+                                    DE441159469</p>
+
+                                    <h5>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h5>
+                                    <p>Redouane Dali<br>Bakusbrink 43a, 32120 Hiddenhausen</p>
+
+                                    <h5>Hinweis zur Berufsbezeichnung</h5>
+                                    <p>JUBAMED ist eine Koordinations- und Vermittlungsplattform für internationale Telemedizin. JUBAMED erbringt selbst keine medizinischen Leistungen. Die medizinischen Konsultationen werden ausschließlich durch approbierte Ärzte der Bundesrepublik Deutschland durchgeführt.</p>
+
+                                    <h5>EU-Streitschlichtung</h5>
+                                    <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:<br>
+                                    <strong>https://ec.europa.eu/consumers/odr</strong><br><br>
+                                    Unsere E-Mail-Adresse finden Sie oben im Impressum. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+
+                                    <h5>Haftung für Inhalte</h5>
+                                    <p>Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen.</p>
+
+                                    <h5>Aufsichtsbehörde</h5>
                                     <p>Landesanstalt für Medien NRW<br>
-                                    Zollhof 2<br>
-                                    40221 Düsseldorf<br>
+                                    Zollhof 2, 40221 Düsseldorf<br>
                                     Deutschland</p>
                                 </div>
                             </div>
@@ -1365,29 +1550,38 @@
                             </button>
                             <div class="accordion-content" id="datenschutz">
                                 <div class="accordion-inner">
-                                    <h5>1. Datenschutz auf einen Blick</h5>
-                                    <p>Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.</p>
-                                    
-                                    <h5>2. Verantwortlicher</h5>
-                                    <p>Redouane Dali<br>
-                                    Bakusbrink 43a<br>
-                                    32120 Hiddenhausen<br>
-                                    E-Mail: redouane.dali@JUBAMED.com</p>
-                                    
-                                    <h5>3. Erhebung von Daten</h5>
-                                    <p>Bei der Nutzung unseres Kontaktformulars werden die von Ihnen angegebenen Daten (Name, Fachrichtung, Praxis/Klinik, E-Mail, Telefon, Nachricht) zwecks Bearbeitung Ihrer Anfrage und für den Fall von Anschlussfragen bei uns gespeichert.</p>
-                                    
-                                    <h5>4. Verwendung von Daten</h5>
-                                    <p>Die erhobenen Daten werden ausschließlich zur Bearbeitung Ihrer Anfrage verwendet und nicht an Dritte weitergegeben. Eine Nutzung für Werbezwecke erfolgt nicht.</p>
-                                    
-                                    <h5>5. Speicherdauer</h5>
-                                    <p>Die Daten werden gelöscht, sobald sie für die Erreichung des Zweckes ihrer Erhebung nicht mehr erforderlich sind oder Sie der Speicherung widersprechen.</p>
-                                    
-                                    <h5>6. Ihre Rechte</h5>
-                                    <p>Sie haben jederzeit das Recht auf Auskunft über die bei uns gespeicherten personenbezogenen Daten, deren Herkunft und Empfänger sowie den Zweck der Datenverarbeitung. Außerdem haben Sie ein Recht auf Berichtigung, Sperrung oder Löschung dieser Daten.</p>
-                                    
-                                    <h5>7. Widerspruch Werbe-Mails</h5>
-                                    <p>Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten zur Übersendung von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit widersprochen.</p>
+                                    <h5>1. Verantwortlicher (Art. 13 DSGVO)</h5>
+                                    <p><strong>Redouane Dali</strong><br>
+                                    Bakusbrink 43a, 32120 Hiddenhausen<br>
+                                    E-Mail: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="542631303b21353a317a3035383d143e2136353931307a373b39">[email&#160;protected]</a><br>
+                                    Telefon: +49 1523 7521823</p>
+
+                                    <h5>2. Erhebung und Verarbeitung personenbezogener Daten</h5>
+                                    <p>Wir erheben personenbezogene Daten nur, soweit dies für die Bereitstellung unserer Dienste erforderlich ist. Beim Besuch unserer Website werden folgende Daten automatisch durch den Webserver protokolliert: IP-Adresse, Datum und Uhrzeit des Zugriffs, aufgerufene Seite, Browsertyp und -version, Betriebssystem. Diese Daten werden ausschließlich zu technischen Zwecken und zur Sicherheit gespeichert und nicht mit anderen Daten zusammengeführt.</p>
+
+                                    <h5>3. Kontaktformular / Terminbuchung</h5>
+                                    <p>Bei Nutzung des Terminbuchungssystems (Calendly) oder der direkten Kontaktaufnahme per E-Mail werden die von Ihnen angegebenen Daten (Name, E-Mail, Fachrichtung, Nachricht) ausschließlich zur Bearbeitung Ihrer Anfrage gespeichert und verwendet. Eine Weitergabe an Dritte erfolgt nicht. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse).</p>
+
+                                    <h5>4. Drittanbieter: Calendly</h5>
+                                    <p>Für die Terminbuchung nutzen wir den Dienst Calendly (Calendly LLC, Atlanta, USA). Bei Nutzung des Buchungslinks werden Daten an Calendly übermittelt. Calendly ist nach dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen: <strong>calendly.com/privacy</strong></p>
+
+                                    <h5>5. Google Analytics</h5>
+                                    <p>Diese Website nutzt Google Analytics 4 (Google Ireland Ltd., Gordon House, Barrow Street, Dublin 4, Irland) zur anonymisierten Analyse des Nutzerverhaltens. Die IP-Anonymisierung ist aktiviert. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO. Sie können der Datenerhebung durch Google Analytics widersprechen unter: <strong>tools.google.com/dlpage/gaoptout</strong></p>
+
+                                    <h5>6. Speicherdauer</h5>
+                                    <p>Personenbezogene Daten aus Kontaktanfragen werden gelöscht, sobald der Zweck der Speicherung entfällt oder spätestens nach 24 Monaten, sofern keine gesetzlichen Aufbewahrungspflichten bestehen.</p>
+
+                                    <h5>7. Ihre Rechte (Art. 15–22 DSGVO)</h5>
+                                    <p>Sie haben das Recht auf: Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21). Zur Ausübung Ihrer Rechte wenden Sie sich an: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7d0f181912081c131853191c11143d17081f1c101819531e1210">[email&#160;protected]</a></p>
+
+                                    <h5>8. Beschwerderecht</h5>
+                                    <p>Sie haben das Recht, sich bei der zuständigen Datenschutzaufsichtsbehörde zu beschweren:<br>
+                                    <strong>Landesbeauftragte für Datenschutz und Informationsfreiheit NRW</strong><br>
+                                    Kavalleriestraße 2–4, 40213 Düsseldorf<br>
+                                    <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="51213e22252225343d3d34113d35387f3f23267f3534">[email&#160;protected]</a></p>
+
+                                    <h5>9. Keine Pflicht zur Bereitstellung</h5>
+                                    <p>Die Bereitstellung personenbezogener Daten ist weder gesetzlich noch vertraglich vorgeschrieben. Ohne Angabe von Kontaktdaten ist jedoch keine Terminvereinbarung möglich.</p>
                                 </div>
                             </div>
                         </li>
@@ -1418,19 +1612,23 @@
                     </h4>
                     <ul>
                         <li><a href="#">
-                            <span class="lang-de">Dermatologie</span>
-                            <span class="lang-en">Dermatology</span>
+                            <span class="lang-de">Diabetologie</span>
+                            <span class="lang-en">Diabetology</span>
                         </a></li>
                         <li><a href="#">
-                            <span class="lang-de">Stoffwechsel</span>
-                            <span class="lang-en">Metabolic Disorders</span>
+                            <span class="lang-de">Endokrinologie</span>
+                            <span class="lang-en">Endocrinology</span>
+                        </a></li>
+                        <li><a href="#">
+                            <span class="lang-de">Dermatologie (geplant)</span>
+                            <span class="lang-en">Dermatology (planned)</span>
                         </a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2024 JUBAMED. 
+                <p>&copy; <span id="footerYear"></span> JUBAMED. 
                     <span class="lang-de">Alle Rechte vorbehalten.</span>
                     <span class="lang-en">All rights reserved.</span>
                 </p>
@@ -1438,18 +1636,57 @@
         </div>
     </footer>
 
-    <script>
-        // Language Switcher
-        function setLanguage(lang) {
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Set footer year dynamically
+        document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+        // ── Speed Dial ──
+        function toggleSpeedDial() {
+            document.getElementById('speedDial').classList.toggle('open');
+        }
+        // Close when clicking outside
+        document.addEventListener('click', function(e) {
+            const sd = document.getElementById('speedDial');
+            if (!sd.contains(e.target)) sd.classList.remove('open');
+        });
+
+        // Phone reveal – show number tooltip, then switch to real call link
+        function revealPhone(e) {
+            e.stopPropagation();
+            const tooltip  = document.getElementById('sdPhoneTooltip');
+            const trigger  = document.getElementById('sdPhoneTrigger');
+            const callBtn  = document.getElementById('sdPhoneBtn');
+            const labelDe  = document.getElementById('sdPhoneLabel');
+            const labelEn  = document.getElementById('sdPhoneLabelEn');
+            tooltip.classList.add('show');
+            trigger.style.display = 'none';
+            callBtn.style.display = 'flex';
+            // Update labels
+            const lang = document.body.getAttribute('data-lang');
+            labelDe.textContent = lang === 'en' ? 'Tap to call' : 'Jetzt anrufen';
+        }
+
+        // Hide speed dial when contact section visible
+        const contactSection = document.getElementById('contact');
+        const speedDial = document.getElementById('speedDial');
+        if (contactSection && speedDial) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) speedDial.classList.add('hidden');
+                    else speedDial.classList.remove('hidden');
+                });
+            }, { threshold: 0.3 });
+            observer.observe(contactSection);
+        }
+        function setLanguage(lang, btn) {
             document.body.setAttribute('data-lang', lang);
-            
-            // Update active button
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.remove('active');
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            // Fix Speed Dial labels visibility
+            document.querySelectorAll('.sd-label').forEach(el => {
+                if (el.classList.contains('lang-de')) el.style.display = (lang === 'de') ? '' : 'none';
+                if (el.classList.contains('lang-en')) el.style.display = (lang === 'en') ? '' : 'none';
             });
-            event.target.classList.add('active');
-            
-            // Store preference
             localStorage.setItem('jubamed-lang', lang);
         }
 
@@ -1508,55 +1745,4 @@
             content.classList.add('active');
             toggle.classList.add('active');
             
-            // Scroll to footer
-            document.querySelector('footer').scrollIntoView({ behavior: 'smooth' });
-            
-            event.preventDefault();
-        }
-
-        // Form Validation
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            const privacyCheckbox = document.getElementById('privacy');
-            const privacyError = document.getElementById('privacyError');
-            
-            // Check privacy checkbox
-            if (!privacyCheckbox.checked) {
-                e.preventDefault();
-                privacyError.classList.add('show');
-                privacyCheckbox.focus();
-                return false;
-            } else {
-                privacyError.classList.remove('show');
-            }
-        });
-
-        // Remove error when checkbox is checked
-        document.getElementById('privacy').addEventListener('change', function() {
-            if (this.checked) {
-                document.getElementById('privacyError').classList.remove('show');
-            }
-        });
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if (href !== '#') {
-                    e.preventDefault();
-                    const target = document.querySelector(href);
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                }
-            });
-        });
-    </script>
-
-</body>
-
-</html>
-
-
+            // Scroll 
