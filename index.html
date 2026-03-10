@@ -1,10 +1,46 @@
-<style>
-    .speed-dial {
-        z-index: 10000;
-    }
-    footer {
-        z-index: 1;
-    }
-</style><!-- Updated styles for .speed-dial and footer elements -->
-
-<!-- Rest of your index.html content goes here -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="jubamed_icon_32x32.png" type="image/png">
+    <title>Jubamed Landing Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Jubamed</h1>
+    </header>
+    <main>
+        <p>This is the main content area.</p>
+    </main>
+    <button class="scroll-to-top" onclick="scrollToTop()">Nach oben</button>
+    <script>
+        function scrollToTop() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+        window.onscroll = function() {
+            var button = document.querySelector('.scroll-to-top');
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                button.style.display = 'block';
+            } else {
+                button.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
